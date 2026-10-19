@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 export async function proxy(request) {
+  const { pathname } = request.nextUrl;
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
   let response = NextResponse.next({
     request: {
-      headers: request.headers,
+      headers: requestHeaders,
     },
   });
 
@@ -23,7 +28,9 @@ export async function proxy(request) {
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({
-          request,
+          request: {
+            headers: requestHeaders,
+          },
         });
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
@@ -32,21 +39,29 @@ export async function proxy(request) {
     },
   });
 
+  // Memanggil getUser() untuk me-refresh sesi dan memastikan user valid
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
-
-  // Izinkan halaman login dibuka tanpa autentikasi
+  // 1. Jika membuka /admin/login
   if (pathname === "/admin/login") {
+    // Kalau sudah login dan membuka /admin/login, redirect ke /admin
+    if (user) {
+      const adminUrl = new URL("/admin", request.url);
+      const redirectResponse = NextResponse.redirect(adminUrl);
+      response.cookies.getAll().forEach((c) => redirectResponse.cookies.set(c));
+      return redirectResponse;
+    }
     return response;
   }
 
-  // Lindungi semua rute /admin lainnya: jika belum login, alihkan ke /admin/login
-  if (pathname.startsWith("/admin") && !user) {
+  // 2. Rute admin lainnya: tanpa user, redirect ke /admin/login
+  if (!user) {
     const loginUrl = new URL("/admin/login", request.url);
-    return NextResponse.redirect(loginUrl);
+    const redirectResponse = NextResponse.redirect(loginUrl);
+    response.cookies.getAll().forEach((c) => redirectResponse.cookies.set(c));
+    return redirectResponse;
   }
 
   return response;
@@ -56,6 +71,5 @@ export { proxy as middleware };
 export default proxy;
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*"],
 };
-

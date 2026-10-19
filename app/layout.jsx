@@ -6,12 +6,20 @@ import { toko } from "@/lib/toko";
 export const metadata = {
   title: toko.nama,
   description: toko.tagline,
+  icons: {
+    apple: "/icons/icon-192.png",
+  },
+};
+
+export const viewport = {
+  themeColor: "#1f6b4f",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <head>
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link

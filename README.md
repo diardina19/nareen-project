@@ -1,4 +1,4 @@
-# Katalog UMKM + Order WhatsApp
+# Meowmart - Katalog Toko Perlengkapan Kucing + Order WhatsApp
 
 Template workshop vibe coding Creative Hub App Talent (CHAT) 2026. Repo ini berisi tampilan aplikasi katalog UMKM; tugasmu merangkainya menjadi sistem utuh dengan bantuan AI: database, login admin, keamanan, dan pemesanan lewat WhatsApp.
 
@@ -74,7 +74,7 @@ Urutan yang disarankan: US-01, US-02, US-03, US-04, US-05, US-06, lalu fitur bon
 
 ## Tentang aplikasi ini
 
-- **Nama usaha:**
-- **Pembuat:**
-- **Link aplikasi:**
-- **Fitur bonus yang dikerjakan:**
+- **Nama usaha: Meowmart** 
+- **Pembuat: Diar Dina**
+- **Link aplikasi:https://lebqtwsqtsnogrvtpdxn.supabase.co **
+- **Fitur bonus yang dikerjakan: US-07 (List Produk di Admin dari Database), ** 
